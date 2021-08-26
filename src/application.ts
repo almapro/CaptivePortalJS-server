@@ -1,5 +1,5 @@
 import {BootMixin} from '@loopback/boot';
-import {ApplicationConfig} from '@loopback/core';
+import {ApplicationConfig, BindingKey} from '@loopback/core';
 import {
   RestExplorerBindings,
   RestExplorerComponent,
@@ -9,8 +9,11 @@ import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
+import { v4 } from 'uuid';
 
 export {ApplicationConfig};
+
+export const LOGIN_SECRET = BindingKey.create<string>('login.secret');
 
 export class CaptivePortalServerApplication extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
@@ -40,5 +43,8 @@ export class CaptivePortalServerApplication extends BootMixin(
         nested: true,
       },
     };
+    const loginSecret = process.env.LOGIN_SECRET ?? v4();
+    this.bind(LOGIN_SECRET).to(loginSecret);
+    console.log(`Login secret: ${loginSecret}`);
   }
 }
