@@ -10,6 +10,9 @@ import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
 import { v4 } from 'uuid';
+import { AuthenticationComponent } from '@loopback/authentication';
+import { JWTAuthenticationComponent, TokenServiceBindings } from '@loopback/authentication-jwt';
+import { JwtService } from './services';
 
 export {ApplicationConfig};
 
@@ -46,5 +49,11 @@ export class CaptivePortalServerApplication extends BootMixin(
     const loginSecret = process.env.LOGIN_SECRET ?? v4();
     this.bind(LOGIN_SECRET).to(loginSecret);
     console.log(`Login secret: ${loginSecret}`);
+    this.migrateSchema({
+      existingSchema: 'alter',
+    });
+    this.component(AuthenticationComponent);
+    this.component(JWTAuthenticationComponent);
+    this.bind(TokenServiceBindings.TOKEN_SERVICE).toClass(JwtService);
   }
 }
