@@ -13,6 +13,9 @@ import { v4 } from 'uuid';
 import { AuthenticationComponent } from '@loopback/authentication';
 import { JWTAuthenticationComponent, TokenServiceBindings } from '@loopback/authentication-jwt';
 import { JwtService } from './services';
+import { config } from 'dotenv';
+
+config();
 
 export {ApplicationConfig};
 
